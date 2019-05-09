@@ -25,8 +25,8 @@
               :rules="rules"
               :model="userInfo"
               label-position="left"
-              label-width="140px"
-              style="width: 600px; margin-left:25%;margin-top: 20px"
+              label-width="100px"
+              style="width: 600px; margin-top: 20px"
               :disabled="editable"
             >
               <el-form-item :label="$t('用户昵称')" prop="nickname">
@@ -36,7 +36,7 @@
                 <el-input v-model="userInfo.username" />
               </el-form-item>
               <el-form-item :label="$t('性别')" prop="sex">
-                <el-select v-model="userInfo.sex" class="filter-item" placeholder="请选择">
+                <el-select v-model="userInfo.sex" placeholder="请选择" style="width: 500px;">
                   <el-option v-for="item in sexOptions" :key="item.key" :label="item.display_name" :value="item.key" />
                 </el-select>
               </el-form-item>
@@ -83,65 +83,6 @@
     width: 178px;
     height: 178px;
     display: block;
-  }
-</style>
-<style lang="scss" scoped>
-  .box-center {
-    margin: 0 auto;
-    display: table;
-  }
-
-  .text-muted {
-    color: #777;
-  }
-
-  .user-profile {
-    .user-name {
-      font-weight: bold;
-    }
-
-    .box-center {
-      padding-top: 10px;
-    }
-
-    .user-role {
-      padding-top: 10px;
-      font-weight: 400;
-      font-size: 14px;
-    }
-
-    .box-social {
-      padding-top: 30px;
-
-      .el-table {
-        border-top: 1px solid #dfe6ec;
-      }
-    }
-
-    .user-follow {
-      padding-top: 20px;
-    }
-  }
-
-  .user-bio {
-    margin-top: 20px;
-    color: #606266;
-
-    span {
-      padding-left: 4px;
-    }
-
-    .user-bio-section {
-      font-size: 14px;
-      padding: 15px 0;
-
-      .user-bio-section-header {
-        border-bottom: 1px solid #dfe6ec;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-        font-weight: bold;
-      }
-    }
   }
 </style>
 <script>
@@ -248,7 +189,7 @@ export default {
       // this.userInfo.avatar = res.data.url
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg'
+      const isJPG = file.type === 'image/jpeg/gif/jpg'
       const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
