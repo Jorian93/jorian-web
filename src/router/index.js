@@ -10,7 +10,7 @@ import ArticleAnalysis from '@/views/article/article-analysis/index'
 import User from '@/views/system/user/index'
 import Role from '@/views/system/role/index'
 import Resource from '@/views/system/resource/index'
-import License from '@/views/system/license/index'
+import License from '@/views/system/organization/index'
 
 Vue.use(Router)
 
@@ -91,7 +91,19 @@ export const constantRoutes = [
       component: () => import('@/views/gis/index'),
       meta: { title: '首页', icon: 'home' }
     }]
-
+  },
+  {
+    path: '/account',
+    hidden: true,
+    redirect: 'index',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/account/index'),
+        meta: { title: '个人中心', icon: 'user' }
+      }
+    ]
   }
 ]
 /**
@@ -240,7 +252,6 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

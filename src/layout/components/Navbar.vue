@@ -31,10 +31,8 @@
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>
-          <router-link to="/account/userCenter">
-            <el-dropdown-item>
-              {{ $t('navbar.userCenter') }}
-            </el-dropdown-item>
+          <router-link to="/account/index">
+            <el-dropdown-item>{{ $t('navbar.userCenter') }}</el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>

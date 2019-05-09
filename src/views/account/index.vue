@@ -1,61 +1,63 @@
 <template>
   <div class="app-container">
-    <label>个人信息修改</label>
-    <el-form
-      ref="dataForm"
-      :rules="rules"
-      :model="userInfo"
-      label-position="left"
-      label-width="140px"
-      style="width: 600px; margin-left:25%;margin-top: 20px"
-      :disabled="editable"
-    >
-      <el-form-item :label="$t('用户昵称')" prop="nickname">
-        <el-input v-model="userInfo.nickname" />
-      </el-form-item>
-      <el-form-item :label="$t('登录账号')" prop="username">
-        <el-input v-model="userInfo.username" />
-      </el-form-item>
-      <el-form-item :label="$t('性别')" prop="sex">
-        <el-select v-model="userInfo.sex" class="filter-item" placeholder="请选择">
-          <el-option v-for="item in sexOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-        </el-select>
-      </el-form-item>
-      <el-form-item :label="$t('电话')" prop="phone">
-        <el-input v-model="userInfo.phone" />
-      </el-form-item>
-      <el-form-item :label="$t('邮箱')" prop="email">
-        <el-input v-model="userInfo.email" />
-      </el-form-item>
-      <el-form-item :label="$t('公司')" prop="company">
-        <el-input v-model="userInfo.company" />
-      </el-form-item>
-      <el-form-item :label="$t('头像')" prop="avatar">
-        <!--<el-upload
-            class="avatar-uploader"
-            action="http://127.0.0.1:8081/fileUpload"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="userInfo.avatar"   v-bind:src="userInfo.avatar" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>-->
-        <el-upload
-          class="avatar-uploader"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-          :before-upload="beforeAvatarUpload"
-        >
-          <img v-if="imageUrl" :src="imageUrl" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon" />
-        </el-upload>
-      </el-form-item>
-    </el-form>
-    <div slot="footer" class="dialog-footer" align="center">
-      <el-button @click="editable = true">{{ $t('放弃修改') }}</el-button>
-      <el-button type="primary" style="margin-left: 160px" @click="updateData()">{{ $t('确认修改') }}</el-button>
-    </div>
+    <el-col :span="24" :xs="24" align="center">
+      <el-card style="margin-bottom:20px;">
+        <div slot="header" class="clearfix">
+          <span>个人信息修改</span>
+        </div>
+        <div class="user-profile">
+          <div class="box-center">
+            <el-upload
+              v-show="!imagecropperShow"
+              class="avatar-uploader"
+              action="123"
+              :show-file-list="false"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+            >
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <i v-else class="el-icon-plus avatar-uploader-icon" />
+            </el-upload>
+          </div>
+          <div class="box-center">
+            <el-form
+              ref="dataForm"
+              :rules="rules"
+              :model="userInfo"
+              label-position="left"
+              label-width="140px"
+              style="width: 600px; margin-left:25%;margin-top: 20px"
+              :disabled="editable"
+            >
+              <el-form-item :label="$t('用户昵称')" prop="nickname">
+                <el-input v-model="userInfo.nickname" />
+              </el-form-item>
+              <el-form-item :label="$t('登录账号')" prop="username">
+                <el-input v-model="userInfo.username" />
+              </el-form-item>
+              <el-form-item :label="$t('性别')" prop="sex">
+                <el-select v-model="userInfo.sex" class="filter-item" placeholder="请选择">
+                  <el-option v-for="item in sexOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+                </el-select>
+              </el-form-item>
+              <el-form-item :label="$t('电话')" prop="phone">
+                <el-input v-model="userInfo.phone" />
+              </el-form-item>
+              <el-form-item :label="$t('邮箱')" prop="email">
+                <el-input v-model="userInfo.email" />
+              </el-form-item>
+              <el-form-item :label="$t('公司')" prop="company">
+                <el-input v-model="userInfo.company" />
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+        <div class="dialog-footer" align="center">
+          <el-button @click="editable = true">{{ $t('放弃修改') }}</el-button>
+          <el-button type="primary" style="margin-left: 160px" @click="updateData()">{{ $t('确认修改') }}</el-button>
+        </div>
+      </el-card>
+    </el-col>
   </div>
 </template>
 <style>
@@ -83,11 +85,74 @@
     display: block;
   }
 </style>
+<style lang="scss" scoped>
+  .box-center {
+    margin: 0 auto;
+    display: table;
+  }
+
+  .text-muted {
+    color: #777;
+  }
+
+  .user-profile {
+    .user-name {
+      font-weight: bold;
+    }
+
+    .box-center {
+      padding-top: 10px;
+    }
+
+    .user-role {
+      padding-top: 10px;
+      font-weight: 400;
+      font-size: 14px;
+    }
+
+    .box-social {
+      padding-top: 30px;
+
+      .el-table {
+        border-top: 1px solid #dfe6ec;
+      }
+    }
+
+    .user-follow {
+      padding-top: 20px;
+    }
+  }
+
+  .user-bio {
+    margin-top: 20px;
+    color: #606266;
+
+    span {
+      padding-left: 4px;
+    }
+
+    .user-bio-section {
+      font-size: 14px;
+      padding: 15px 0;
+
+      .user-bio-section-header {
+        border-bottom: 1px solid #dfe6ec;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+    }
+  }
+</style>
 <script>
 import { getInfo } from '@/api/account/account'
+import { fileUpload } from '@/api/fileUpload'
+
 import { updateUser } from '@/api/system/user'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
+import PanThumb from '@/components/PanThumb'
+import ImageCropper from '@/components/ImageCropper'
 
 const sexOptions = [
   { key: 0, display_name: '女' },
@@ -97,16 +162,19 @@ const sexOptions = [
 export default {
   name: 'ComplexTable',
   directives: { waves },
+  components: { PanThumb, ImageCropper },
   filters: {
   },
   data() {
     return {
-      imageUrl: '',
+      imagecropperShow: false,
+      imagecropperKey: 0,
+      image: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191',
+      imageUrl: 'https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191',
       sexOptions,
       filterText: '',
       listQuery: { token: 'admin-token' },
       userInfo: null,
-      avatarurl: '',
       total: 0,
       listLoading: true,
       id: '1001',
@@ -161,7 +229,6 @@ export default {
               duration: 2000
             })
           })
-
           this.editable = true
           location.reload()
         }
@@ -177,8 +244,8 @@ export default {
       }))
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-      this.userInfo.avatar = this.imageUrl
+      // this.imageUrl = URL.createObjectURL(file.raw)
+      // this.userInfo.avatar = res.data.url
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg'
@@ -190,6 +257,19 @@ export default {
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
+      const fd = new FormData()
+      fd.append('file', file)
+      fileUpload(fd).then((res) => {
+        this.imageUrl = 'http://' + res.data.url
+        this.userInfo.avatar = this.imageUrl
+        this.$notify({
+          title: '成功',
+          message: '上传成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
+
       return isJPG && isLt2M
     }
 

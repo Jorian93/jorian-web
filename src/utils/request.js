@@ -5,8 +5,9 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  baseURL: 'http://127.0.0.1:8081/',
+  //  // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_API,
+  // baseURL: 'http://127.0.0.1:8085/',
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -56,13 +57,25 @@ service.interceptors.response.use(
         type: 'error',
         duration: 5 * 1000
       })
-
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 50008 || res.code === 50012 || res.code === 50014 || res.status === 500) {
         // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
+        MessageBox.confirm('你已被登出，你可以选择继续待在此页面或重新登入', '确定登出', {
+          confirmButtonText: '重新登入',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })
+        })
+      }
+      // 208: 未登录
+      if (res.code === 208) {
+        // to re-login
+        MessageBox.confirm('你已被登出，你可以选择继续待在此页面或重新登入', '确定登出', {
+          confirmButtonText: '重新登入',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
@@ -78,7 +91,7 @@ service.interceptors.response.use(
   error => {
     console.log(error) // for debug
     Message({
-      message: error,
+      message: error.error,
       type: 'error',
       duration: 5 * 1000
     })

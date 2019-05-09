@@ -139,7 +139,7 @@
           <el-input v-model="temp.permission" />
         </el-form-item>
         <el-form-item :label="$t('图标')" prop="icon">
-          <el-input v-model="temp.icon" />
+          <el-input v-model="temp.icon" /><el-button type="text" @click="iconPanelVisible = true">选择图标</el-button>
         </el-form-item>
         <el-form-item :label="$t('是否校验')" prop="isVerify">
           <el-select v-model="temp.isVerify" class="filter-item" placeholder="请选择">
@@ -156,6 +156,10 @@
       </div>
     </el-dialog>
 
+    <el-dialog :title="$t('图标')" :visible.sync="iconPanelVisible">
+      <Icons @closeMoule="closeMoule" />
+    </el-dialog>
+
   </div>
 </template>
 
@@ -165,7 +169,7 @@
 */
 import TreeTable from '@/components/TreeTable'
 import { fetchList, fetchTree, deleteResource, fetchResource, createResource, updateResource } from '../../../api/system/resource'
-
+import Icons from '@/views/icons'
 const typeOptions = [
   { key: 0, display_name: '按钮' },
   { key: 1, display_name: '菜单' }
@@ -176,7 +180,7 @@ const isVerifyOptions = [
 ]
 export default {
   name: 'CustomTreeTableDemo',
-  components: { TreeTable },
+  components: { TreeTable, Icons },
   data() {
     return {
       search: '',
@@ -200,6 +204,7 @@ export default {
       },
       row: {},
       dialogFormVisible: false,
+      iconPanelVisible: false,
       dialogStatus: '',
       textMap: {
         update: '修改',
@@ -312,6 +317,10 @@ export default {
     },
     selectChange(val) {
       console.log(val)
+    },
+    closeMoule(e) {
+      this.temp.icon = e
+      this.iconPanelVisible = false
     }
 
   }

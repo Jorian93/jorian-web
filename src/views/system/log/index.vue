@@ -1,12 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.company" :placeholder="$t('单位名称')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.status" :placeholder="$t('状态')" clearable style="width: 110px" class="filter-item">
+      <el-input v-model="listQuery.username" :placeholder="$t('用户名')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <!-- <el-select v-model="listQuery.status" :placeholder="$t('状态')" clearable style="width: 110px" class="filter-item">
         <el-option v-for="item in statusOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-      </el-select>
+      </el-select>-->
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('table.export') }}</el-button>
     </div>
 
@@ -20,64 +19,69 @@
       :default-sort="{prop: 'createDate', order: 'descending'}"
       style="width: 100%;margin-top: 20px;"
     >
-      <el-table-column :label="$t('序号')" prop="id" sortable align="center" width="65">
+      <el-table-column v-if="false" :label="$t('序号')" prop="id" sortable align="center" width="65">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('单位名称')" min-width="110px" align="center">
+      <el-table-column :label="$t('用户名')" min-width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.company }}</span>
+          <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('授权码')" min-width="80px" align="center">
+      <el-table-column :label="$t('昵称')" min-width="80px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.code }}</span>
+          <span>{{ scope.row.nickname }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('授权状态')" prop="status" sortable width="80px" align="center">
+      <el-table-column :label="$t('行为')" min-width="100px" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.status=='1'" style="color:springgreen;">正常</span>
-          <span v-else-if="scope.row.status=='0'" style="color:red;">已过期</span>
+          <span>{{ scope.row.actionName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('授权到期日')" prop="expireDate" sortable class-name="status-col" width="150px">
+      <el-table-column :label="$t('接口地址')" min-width="140px" align="left">
         <template slot-scope="scope">
-          <span>{{ scope.row.expireDate | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.api }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('创建时间')" prop="createDate" sortable width="150px" align="center">
+      <el-table-column :label="$t('请求方式')" width="90px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createDate | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.httpMethod }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('操作')" align="center" width="330" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('ip')" min-width="80px" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" type="success" @click="handleUpdate(scope.row,'published')">{{ $t('修改') }}
-          </el-button>
-          <el-button v-if="scope.row.status" size="mini" @click="handleModifyStatus(scope.row,'0')">{{ $t('锁定') }}
-          </el-button>
-          <el-button v-else-if="!scope.row.status" size="mini" @click="handleModifyStatus(scope.row,'1')">{{ $t('解锁') }}
-          </el-button>
+          <span>{{ scope.row.ip }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('Ajax')" prop="status" width="100px" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.ajax==1" style="color:springgreen;">是</span>
+          <span v-else-if="scope.row.ajax==0" style="color:red;">否</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="false" :label="$t('请求参数')" min-width="140px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.params }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('创建时间')" prop="createTime" sortable width="135px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('操作')" align="center" width="100" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">{{ $t('删除') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
-
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" style="width: 600px; margin-left:50px;">
         <el-form-item :label="$t('单位名称')" prop="company">
           <el-input v-model="temp.company" />
-        </el-form-item>
-        <el-form-item :label="$t('授权状态')" prop="status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in statusOptions" :key="item.key" :label="item.display_name" :value="item.key" />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('授权到期日')" prop="expireDate">
-          <el-date-picker v-model="temp.expireDate" type="datetime" placeholder="请选择" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -90,18 +94,18 @@
 </template>
 
 <script>
-import { fetchList, createLicense, updateLicense } from '@/api/system/license'
+import { fetchList, deleteLog } from '@/api/system/log'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 const statusOptions = [
-  { key: '0', display_name: '已过期' },
-  { key: '1', display_name: '正常' }
+  { key: 0, display_name: '是' },
+  { key: 1, display_name: '否' }
 ]
 
 export default {
-  name: 'License',
+  name: 'Log',
   components: { Pagination },
   directives: { waves },
   filters: {
@@ -122,20 +126,24 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        company: undefined,
-        status: undefined,
-        sort: '+id'
+        username: ''
       },
       statusOptions,
       showReviewer: false,
       temp: {
         id: '',
-        createDate: '',
-        updateDate: '',
-        status: '',
-        code: '',
-        expireDate: '',
-        company: ''
+        username: '',
+        nickname: '',
+        ip: '',
+        ajax: '',
+        api: '',
+        params: '',
+        httpMethod: '',
+        classMethod: '',
+        actionName: '',
+        createTime: '',
+        updateTime: ''
+
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -160,149 +168,30 @@ export default {
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
-        this.list = response.items
-        this.total = response.total
+        this.list = response.data.records
+        this.total = response.data.total
 
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
-        }, 1.5 * 1000)
+        }, 1 * 1000)
       })
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.status = status
-    },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-      if (prop === 'status') {
-        this.sortByStatus(order)
-      }
-      if (prop === 'createDate') {
-        this.sortByCreateDate(order)
-      }
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
-    sortByStatus(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
-    sortByCreateDate(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
-    resetTemp() {
-      this.temp = {
-        id: '',
-        createDate: '',
-        updateDate: '',
-        status: '',
-        code: '',
-        expireDate: '',
-        company: ''
-      }
-    },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.code = 'TEST-' + parseInt(Math.random() * 100) + 1024
-          this.temp.createDate = new Date()
-          this.temp.author = 'super-admin'
-          createLicense(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateLicense(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
     handleDelete(row) {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
+      deleteLog(row.id).then((response) => {
+        const index = this.list.indexOf(row)
+        this.list.splice(index, 1)
+        this.$notify({
+          title: response.code,
+          message: '删除成功',
+          type: 'success',
+          duration: 1500
+        })
       })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
     },
     handleDownload() {
       this.downloadLoading = true

@@ -2,17 +2,16 @@ import request from '@/utils/request'
 
 export function fetchList(query) {
   return request({
-    url: '/license/list',
+    url: '/system/log/list',
     method: 'get',
     params: query
   })
 }
 
-export function fetchLog(id) {
+export function deleteLog(id) {
   return request({
-    url: '/license/detail',
-    method: 'get',
-    params: { id }
+    url: '/system/log/' + id,
+    method: 'delete'
   })
 }
 

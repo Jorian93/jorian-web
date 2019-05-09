@@ -16,9 +16,16 @@ if (process.env.npm_config_preview || rawArgv.includes('--preview')) {
   var serveStatic = require('serve-static')
   const app = connect()
 
-  app.use(
+  /*app.use(          //原始的，用于恢复
     publicPath,
     serveStatic('./dist', {
+      index: ['index.html', '/']
+    })
+  )*/
+
+  app.use(          //用于打包
+    publicPath,
+    serveStatic('./', {
       index: ['index.html', '/']
     })
   )
