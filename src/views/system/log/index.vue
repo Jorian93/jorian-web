@@ -172,9 +172,9 @@ export default {
         this.total = response.data.total
 
         // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1 * 1000)
+        /* setTimeout(() => {*/
+        this.listLoading = false
+        /* }, 1 * 1000)*/
       })
     },
     handleFilter() {

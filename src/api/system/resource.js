@@ -17,14 +17,7 @@ export function fetchTree() {
 
 export function fetchTreeCheckedNode(rid) {
   return request({
-    url: 'system/resource/tree/' + rid,
-    method: 'get'
-  })
-}
-
-export function fetcheElementTree() {
-  return request({
-    url: 'system/resource/ElementTree',
+    url: 'system/resource/' + rid,
     method: 'get'
   })
 }

@@ -97,27 +97,17 @@
 
 <script>
 import { fetchList, createRole, updateRole, deleteRole } from '@/api/system/role'
-import { fetchTree, fetcheElementTree, fetchTreeCheckedNode } from '@/api/system/resource'
+import { fetchTree, fetchTreeCheckedNode } from '@/api/system/resource'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'ComplexTable',
+  name: 'Role',
   components: { Pagination },
   directives: { waves },
   filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    },
-    typeFilter(type) {
-      return calendarTypeKeyValue[type]
-    }
+
   },
   data() {
     return {
@@ -239,9 +229,10 @@ export default {
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
+      this.permissionChecked = []
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
-        this.resetChecked()
+        this.resetChecked()// 清空选择点
       })
     },
     createData() {
