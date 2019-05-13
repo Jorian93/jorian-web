@@ -118,22 +118,27 @@
         <el-form-item :label="$t('资源名称')" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
-        <el-form-item :label="$t('组件名称')" prop="name">
+        <el-form-item :label="$t('Path')" prop="path">
+          <el-input v-model="temp.path" />
+        </el-form-item>
+        <el-form-item :label="$t('面包屑跳转')" prop="redirect">
+          <el-input v-model="temp.redirect" />
+        </el-form-item>
+        <el-form-item :label="$t('组件名')" prop="name">
           <el-input v-model="temp.name" />
         </el-form-item>
         <el-form-item :label="$t('组件路径')" prop="component">
           <el-input v-model="temp.component" />
         </el-form-item>
-        <el-form-item :label="$t('面包屑跳转')" prop="redirect">
-          <el-input v-model="temp.redirect" />
+        <el-form-item :label="$t('是否隐藏')" prop="hidden">
+          <el-select v-model="temp.hidden" class="filter-item" placeholder="请选择">
+            <el-option v-for="item in hiddenOptions" :key="item.key" :label="item.display_name" :value="item.key" />
+          </el-select>
         </el-form-item>
         <el-form-item :label="$t('资源类型')" prop="type">
           <el-select v-model="temp.type" class="filter-item" placeholder="请选择">
             <el-option v-for="item in typeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('URL')" prop="path">
-          <el-input v-model="temp.path" />
         </el-form-item>
         <el-form-item :label="$t('权限标识')" prop="permission">
           <el-input v-model="temp.permission" />
@@ -143,7 +148,7 @@
         </el-form-item>
         <el-form-item :label="$t('是否校验')" prop="isVerify">
           <el-select v-model="temp.isVerify" class="filter-item" placeholder="请选择">
-            <el-option v-for="item in isVerifyOptions" :key="item.key" :label="item.display_name":value="item.key" />
+            <el-option v-for="item in isVerifyOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('序号')" prop="sort">
@@ -164,11 +169,8 @@
 </template>
 
 <script>
-/**
 
-*/
-import TreeTable from '@/components/TreeTable'
-import { fetchList, fetchTree, deleteResource, fetchResource, createResource, updateResource } from '../../../api/system/resource'
+import { fetchTree, deleteResource, createResource, updateResource } from '../../../api/system/resource'
 import Icons from '@/views/icons'
 const typeOptions = [
   { key: 0, display_name: '按钮' },
@@ -178,9 +180,13 @@ const isVerifyOptions = [
   { key: true, display_name: '是' },
   { key: false, display_name: '否' }
 ]
+const hiddenOptions = [
+  { key: true, display_name: '是' },
+  { key: false, display_name: '否' }
+]
 export default {
   name: 'CustomTreeTableDemo',
-  components: { TreeTable, Icons },
+  components: { Icons },
   data() {
     return {
       search: '',
@@ -212,6 +218,7 @@ export default {
       },
       isVerifyOptions,
       typeOptions,
+      hiddenOptions,
       rules: {
         // type: [{ required: true, message: 'type is required', trigger: 'change' }],
         updateDate: [{ type: 'date', required: true, message: '时间必须有', trigger: 'change' }],
@@ -249,10 +256,10 @@ export default {
     },
     handleCreate(row, type) {
       this.resetTemp()
-      if (type == 'children') {
+      if (type === 'children') {
         this.temp.pid = row.id
       }
-      if (type == 'brother') {
+      if (type === 'brother') {
         this.temp.pid = row.pid
       }
       this.dialogStatus = 'create'
