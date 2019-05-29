@@ -29,3 +29,11 @@ export function getCurrentUserRouter(token) {
     params: { token }
   })
 }
+
+export function resetPassword(data) {
+  return service({
+    url: '/account/resetPassword',
+    method: 'post',
+    params: data
+  })
+}

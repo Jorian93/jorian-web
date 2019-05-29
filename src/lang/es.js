@@ -132,6 +132,8 @@ export default {
     delete: 'Eliminar',
     cancel: 'Cancelar',
     confirm: 'Confirmar',
+    lock: 'lock',
+    unlock: 'unlock',
     selectplaceholder: 'Please Select'
 
   },

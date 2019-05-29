@@ -62,7 +62,7 @@
         <el-form-item :label="$t('角色描述')" prop="name">
           <el-input v-model="temp.description" />
         </el-form-item>
-        <el-form-item :label="$t('权限集')">
+        <el-form-item :label="$t('权限树')">
           <el-tree
             ref="tree2"
             :data="permission"
@@ -160,10 +160,6 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
-        // Just to simulate the time of the request
-        /* setTimeout(() => {
-
-        }, 1.5 * 1000)*/
         this.listLoading = false
       })
       // 获取所有树
@@ -206,6 +202,9 @@ export default {
     getCheckedKeys() {
       return this.$refs.tree2.getCheckedKeys()
     },
+    getCheckedKeysHalf() {
+      return this.$refs.tree2.getHalfCheckedKeys()
+    },
     setCheckedKeys(checkedKeys) {
       this.$refs.tree2.setCheckedKeys(checkedKeys)
     },
@@ -238,7 +237,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const checkedKeys = this.getCheckedKeys()
+          const checkedKeys = this.getCheckedKeys().concat(this.getCheckedKeysHalf())
           const resources = []
           checkedKeys.forEach(item => {
             const resource = {}
@@ -247,9 +246,11 @@ export default {
           })
           this.temp.resources = resources
           const tempData = Object.assign({}, this.temp)
+          // 前台插入
+          this.list.unshift(this.temp)
+          this.dialogFormVisible = false
+          // 后台插入
           createRole(tempData).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -262,7 +263,7 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.updateDate = new Date(this.temp.updateDate)
+      this.temp.updateDate = +new Date(this.temp.updateDate)// change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       // 获取角色有的树
@@ -276,7 +277,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const checkedKeys = this.getCheckedKeys()
+          const checkedKeys = this.getCheckedKeys().concat(this.getCheckedKeysHalf())
           const resources = []
           checkedKeys.forEach(item => {
             const resource = {}
@@ -285,7 +286,6 @@ export default {
           })
           this.temp.resources = resources
           const tempData = Object.assign({}, this.temp)
-          tempData.updateDate = +new Date(tempData.updateDate) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateRole(tempData).then((response) => {
             this.dialogFormVisible = false
             this.$notify({
@@ -303,9 +303,9 @@ export default {
       // 前台先删除
       const index = this.list.indexOf(row)
       this.list.splice(index, 1)
+      this.dialogFormVisible = false
       // 后台删除
       deleteRole(row.id).then(() => {
-        this.dialogFormVisible = false
         this.$notify({
           title: '200',
           message: '删除成功',

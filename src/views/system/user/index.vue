@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column :label="$t('创建时间')" width="170px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('操作')" align="center" min-width="260" class-name="small-padding fixed-width">
@@ -137,6 +137,7 @@ import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import { validUsername, validPassword } from '@/utils/validate'
+import { Message } from 'element-ui'
 
 const sexOptions = [
   { key: 0, display_name: '女' },
@@ -156,29 +157,36 @@ const validateUsername = (rule, value, callback) => {
 }
 const validatePassword = (rule, value, callback) => {
   if (!validPassword(value)) {
-    callback(new Error('密码应该由4到10位字母数字组成'))
+    callback(new Error('密码应该由6到10位字母数字组成'))
   } else {
     callback()
   }
 }
-const validateRePassword = () => {
-  if (!validPassword(this.repassword)) {
-    callback(new Error('密码应该由4到10位字母数字组成'))
-  } else {
-    if (this.repassword != this.password) {
-      callback(new Error('两次输入不一致'))
-    } else {
-      callback()
-    }
-  }
-}
+
 export default {
-  name: 'ComplexTable',
+  name: 'Login',
   components: { Pagination },
   directives: { waves },
   filters: {
   },
   data() {
+    const validateRePassword = () => {
+      if (!validPassword(this.repassword)) {
+        Message({
+          message: '密码应该由6到10位字母数字组成',
+          type: 'error',
+          duration: 5 * 1000
+        })
+      } else {
+        if (!this.repassword === this.password) {
+          Message({
+            message: '两次输入不一致',
+            type: 'error',
+            duration: 5 * 1000
+          })
+        }
+      }
+    }
     return {
       tableKey: 0,
       list: null,
@@ -195,7 +203,6 @@ export default {
         status: ''
       },
       sortOptions: [{ label: 'ID 增序', key: '+id' }, { label: 'ID 倒序', key: '-id' }],
-      validateRePassword,
       sexOptions,
       statusOptions,
       rolesOptions: [],
@@ -219,14 +226,14 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
-        update: 'edit',
-        create: 'create'
+        update: '修改',
+        create: '新建'
       },
       dialogPvVisible: false,
       rules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
-        /* repassword: [{ required: true,  trigger: 'blur' ,validator: this.validateRePassword }],*/
+        /* repassword: [{ required: true, trigger: 'blur', validator: validateRePassword }]*/
       },
       downloadLoading: false
     }
@@ -254,15 +261,16 @@ export default {
     handleModifyStatus(row, status) {
       row.status = status
       this.temp = Object.assign({}, row)
-      updateUser(this.temp).then(() => {
-        for (const v of this.list) {
-          if (v.id === this.temp.id) {
-            const index = this.list.indexOf(v)
-            this.list.splice(index, 1, this.temp)
-            break
-          }
+      this.temp.updateTime = (new Date()) | parseTime
+      for (const v of this.list) {
+        if (v.id === this.temp.id) {
+          const index = this.list.indexOf(v)
+          this.list.splice(index, 1, this.temp)
+          break
         }
-        this.dialogFormVisible = false
+      }
+      this.dialogFormVisible = false
+      updateUser(this.temp).then(() => {
         this.$notify({
           title: '成功',
           message: '更新成功',
@@ -279,15 +287,15 @@ export default {
     },
     sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = 'id'
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = 'id'
       }
       this.handleFilter()
     },
     resetTemp() {
-      this.roleNameChecked = [],
-      this.repassword = '',
+      this.roleNameChecked = []
+      this.repassword = ''
       this.temp = {
         id: '',
         createTime: undefined,
@@ -320,15 +328,17 @@ export default {
           const roles = []
           this.roleNameChecked.forEach(rolename => {
             this.rolesOptions.forEach(role => {
-              if (rolename == role.name) {
+              if (rolename === role.name) {
                 roles.push(role)
               }
             })
           })
           tempData.roles = roles
+          // 前台
+          this.list.unshift(tempData)
+          this.dialogFormVisible = false
+          // 后台
           createUser(tempData).then(() => {
-            this.list.unshift(tempData)
-            this.dialogFormVisible = false
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -342,7 +352,7 @@ export default {
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
       // 初始化选中的角色
-      this.roleNameChecked = [],
+      this.roleNameChecked = []
       this.temp.roles.forEach(role => {
         this.roleNameChecked.push(role.name)
       })
@@ -360,20 +370,20 @@ export default {
           const roles = []
           this.roleNameChecked.forEach(rolename => {
             this.rolesOptions.forEach(role => {
-              if (rolename == role.name) {
+              if (rolename === role.name) {
                 roles.push(role)
               }
             })
           })
           tempData.roles = roles
-          updateUser(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === tempData.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, tempData)
-                break
-              }
+          for (const v of this.list) {
+            if (v.id === tempData.id) {
+              const index = this.list.indexOf(v)
+              this.list.splice(index, 1, tempData)
+              break
             }
+          }
+          updateUser(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -381,11 +391,14 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getList()
           })
         }
       })
     },
     handleDelete(row) {
+      const index = this.list.indexOf(row)
+      this.list.splice(index, 1)
       deleteUser(row.id).then(() => {
         this.dialogFormVisible = false
         this.$notify({
@@ -394,8 +407,6 @@ export default {
           type: 'success',
           duration: 2000
         })
-        const index = this.list.indexOf(row)
-        this.list.splice(index, 1)
       })
     },
     handleDownload() {

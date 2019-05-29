@@ -29,11 +29,6 @@
           <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('昵称')" min-width="80px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.nickname }}</span>
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('行为')" min-width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.actionName }}</span>
@@ -63,6 +58,11 @@
       <el-table-column v-if="false" :label="$t('请求参数')" min-width="140px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.params }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('调用方法')" min-width="140px" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.classMethod }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('创建时间')" prop="createTime" sortable width="135px" align="center">
@@ -133,7 +133,6 @@ export default {
       temp: {
         id: '',
         username: '',
-        nickname: '',
         ip: '',
         ajax: '',
         api: '',
@@ -170,11 +169,7 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data.records
         this.total = response.data.total
-
-        // Just to simulate the time of the request
-        /* setTimeout(() => {*/
         this.listLoading = false
-        /* }, 1 * 1000)*/
       })
     },
     handleFilter() {
@@ -196,8 +191,28 @@ export default {
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
+        const tHeader = [
+          '用户名',
+          'IP',
+          '是否Ajax',
+          '请求地址',
+          '请求参数',
+          '请求方式',
+          '调用方法',
+          '行为',
+          '创建时间'
+        ]
+        const filterVal = [
+          'username',
+          'ip',
+          'ajax',
+          'api',
+          'params',
+          'httpMethod',
+          'classMethod',
+          'actionName',
+          'createTime'
+        ]
         const data = this.formatJson(filterVal, this.list)
         excel.export_json_to_excel({
           header: tHeader,

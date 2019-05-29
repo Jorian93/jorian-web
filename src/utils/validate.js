@@ -19,7 +19,7 @@ export function validUsername(str) {
   return reg.test(str)
 }
 export function validPassword(str) {
-  const reg = /^[a-zA-Z0-9]{4,10}$/
+  const reg = /^[a-zA-Z0-9]{6,10}$/
   return reg.test(str)
 }
 

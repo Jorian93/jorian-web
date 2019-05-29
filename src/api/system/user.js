@@ -18,7 +18,7 @@ export function fetchUser(id) {
 
 export function createUser(data) {
   return request({
-    url: 'system/user',
+    url: 'system/user/add',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createUser(data) {
 
 export function updateUser(data) {
   return request({
-    url: 'system/user',
+    url: 'system/user/update',
     method: 'put',
     data
   })
@@ -34,7 +34,7 @@ export function updateUser(data) {
 
 export function deleteUser(id) {
   return request({
-    url: 'system/user/' + id,
+    url: 'system/user/delete/' + id,
     method: 'delete'
   })
 }

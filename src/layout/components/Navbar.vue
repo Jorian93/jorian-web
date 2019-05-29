@@ -34,6 +34,9 @@
           <router-link to="/account/index">
             <el-dropdown-item>{{ $t('navbar.userCenter') }}</el-dropdown-item>
           </router-link>
+          <router-link to="/account/resetPassword">
+            <el-dropdown-item>{{ $t('重置密码') }}</el-dropdown-item>
+          </router-link>
           <el-dropdown-item divided>
             <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
           </el-dropdown-item>

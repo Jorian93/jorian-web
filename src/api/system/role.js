@@ -17,21 +17,21 @@ export function fetchRole(id) {
 }
 export function createRole(data) {
   return request({
-    url: '/system/role',
+    url: '/system/role/add',
     method: 'post',
     data
   })
 }
 export function deleteRole(id) {
   return request({
-    url: '/system/role/' + id,
+    url: '/system/role/delete/' + id,
     method: 'delete'
   })
 }
 
 export function updateRole(data) {
   return request({
-    url: '/system/role/',
+    url: '/system/role/update',
     method: 'put',
     data
   })

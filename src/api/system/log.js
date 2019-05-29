@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function deleteLog(id) {
   return request({
-    url: '/system/log/' + id,
+    url: '/system/log/delete/' + id,
     method: 'delete'
   })
 }

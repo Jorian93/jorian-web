@@ -32,7 +32,7 @@ export function fetchResource(id) {
 
 export function createResource(data) {
   return request({
-    url: 'system/resource',
+    url: 'system/resource/add',
     method: 'post',
     data
   })
@@ -40,7 +40,7 @@ export function createResource(data) {
 
 export function updateResource(data) {
   return request({
-    url: 'system/resource',
+    url: 'system/resource/update',
     method: 'put',
     data
   })
@@ -48,7 +48,7 @@ export function updateResource(data) {
 
 export function deleteResource(id) {
   return request({
-    url: 'system/resource/' + id,
+    url: 'system/resource/delete/' + id,
     method: 'delete'
   })
 }

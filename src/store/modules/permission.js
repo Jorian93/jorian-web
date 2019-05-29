@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
 import { getCurrentUserRouter } from '@/api/account/account'
 import Layout from '@/layout'
 import import_router from '@/router/import_router'

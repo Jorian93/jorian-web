@@ -189,11 +189,14 @@ export default {
       // this.userInfo.avatar = res.data.url
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg/gif/jpg'
+      const isJPG = file.type === 'image/jpeg'
+      const isGIF = file.type === 'image/gif'
+      const isPNG = file.type === 'image/png'
+      const isBMP = file.type === 'image/bmp'
       const isLt2M = file.size / 1024 / 1024 < 2
 
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+      if (!isJPG && !isGIF && !isPNG && !isBMP) {
+        this.$message.error('上传头像图片只能是 JPG/GIF/PNG/BMP 格式!')
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')

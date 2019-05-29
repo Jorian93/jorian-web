@@ -28,8 +28,8 @@
         align="center"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.type=1" style="color:sandybrown">菜单</span>
-          <span v-else-if="scope.row.type!=1" style="color:sandybrown">按钮</span>
+          <span v-if="scope.row.type===1" style="color:sandybrown">菜单</span>
+          <span v-else-if="scope.row.type==0" style="color:sandybrown">按钮</span>
         </template>
       </el-table-column>
       <el-table-column

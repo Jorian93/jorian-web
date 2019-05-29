@@ -49,70 +49,6 @@
       </el-button>
       <!-- <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">{{ $t('table.reviewer') }}</el-checkbox>-->
     </div>
-    <div class="ttable" style="float: left; margin-right: 15px; margin-top: 20px">
-      <tree-table
-        ref="TreeTable"
-        :node-click="handleNodeClick"
-        :data="treeData"
-        :default-expand-all="true"
-        :columns="columns"
-        border
-        default-children="children"
-      />
-    </div>
-    <div class="etable">
-      <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="list"
-        border
-        fit
-        highlight-current-row
-        style="width: 78%;margin-top: 20px;"
-        @sort-change="sortChange"
-      >
-        <el-table-column :label="$t('档案名称')" prop="id" align="center" min-width="65">
-          <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('文件类型')" width="90px" align="center">
-          <template slot-scope="scope">
-            <span v-if="scope.row.fileType==='0'">文字</span>
-            <span v-else-if="scope.row.fileType==='1'">图片</span>
-            <span v-else-if="scope.row.fileType==='2'">音频</span>
-            <span v-else-if="scope.row.fileType==='3'">视频</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('介质类型')" width="100px" align="center">
-          <template slot-scope="scope">
-            <span v-if="scope.row.medium==='0'">电子</span>
-            <span v-else-if="scope.row.medium==='1'">纸质</span>
-            <span v-else-if="scope.row.medium==='2'">电子加纸质</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('档案信息来源')" align="center" width="105">
-          <template slot-scope="scope">
-            <el-tag v-if="scope.row.source==='0'">录入</el-tag>
-            <el-tag v-else-if="scope.row.source==='1'">扫描</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('创建时间')" width="150px" sortable="custom" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.createDate | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('操作')" align="center" width="330" class-name="small-padding fixed-width">
-          <template slot-scope="scope">
-            <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('查看') }}</el-button>
-            <el-button size="mini" type="success" @click="handleUpdate(scope.row)">{{ $t('修改') }}
-            </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.row)">{{ $t('销毁') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
     <pagination
       v-show="total>0"
       :total="total"
@@ -254,12 +190,11 @@
 </template>
 
 <script>
-import { fetchList, fetchArticle, createArticle, updateArticle } from '@/api/article/article'
+import { fetchList, createArticle, updateArticle } from '@/api/article/article'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import treeTable from '@/components/TreeTable'
-import data from '@/views/article/article-kinds/data.js'
 
 const fileTypeOptions = [
   { key: '0', display_name: '文字' },
@@ -282,12 +217,6 @@ const digitalDeviceOptions = [
   { key: '1', display_name: '照相机' },
   { key: '2', display_name: '录音机' }
 ]
-
-// arr to obj ,such as { CN : "China", US : "USA" }
-const fileTypeKeyValue = fileTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 export default {
   name: 'ComplexTable',
