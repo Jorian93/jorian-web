@@ -87,7 +87,7 @@
       :click-effect="true"
       click-mode="push"
     />
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
+    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" :modal-append-to-body='false'>
       {{ $t('login.thirdpartyTips') }}
       <br>
       <br>
