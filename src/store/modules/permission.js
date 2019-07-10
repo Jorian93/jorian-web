@@ -46,6 +46,9 @@ export function filterAsyncRouter(asyncRouterMap) { // 遍历后台传来的路�
         route.component = import_router(route.component)
       }
     }
+    if(route.children.length===0){ //如果儿子只有一个，删除儿子的空children，不然显示会有箭头
+      delete route.children
+    }
     if (route.children) {
       route.children = filterAsyncRouter(route.children)
     }
