@@ -1,27 +1,15 @@
 //定义两个token
 const tokens = {
-  admin: {
-    token: 'admin-token'
-  },
-  editor: {
-    token: 'editor-token'
-  }
+  admin:'admin-token',
+  editor:'editor-token',
+  test:'test-token',
 }
 
 //根据token封装user
 const users = {
-  'admin-token': {
-    roles: ['admin'],
-    introduction: 'I am a super administrator',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Super Admin'
-  },
-  'editor-token': {
-    roles: ['editor'],
-    introduction: 'I am an editor',
-    avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
-    name: 'Normal Editor'
-  }
+  'admin-token': {"id":"1128217126515646466","createTime":"2019-05-14T16:34:58","updateTime":"2019-05-15T08:25:47","nickname":"游客","username":"test","password":"ba2db62f990019023b2dd826df80ddb9","sex":1,"status":1,"company":"test","phone":"18552365241","email":null,"avatar":"http://jorianye.cn:8084/2019/05/15/17/234318328.jpg","roles":[{"id":"1128215278081679361","createTime":"2019-05-14T16:27:38","updateTime":"2019-05-14T16:27:38","name":"GUEST","description":"游客，只能查看，不能修改删除","resources":null}]},
+  'editor-token': {"id":"1128217126515646466","createTime":"2019-05-14T16:34:58","updateTime":"2019-05-15T08:25:47","nickname":"游客","username":"test","password":"ba2db62f990019023b2dd826df80ddb9","sex":1,"status":1,"company":"test","phone":"18552365241","email":null,"avatar":"http://jorianye.cn:8084/2019/05/15/17/234318328.jpg","roles":[{"id":"1128215278081679361","createTime":"2019-05-14T16:27:38","updateTime":"2019-05-14T16:27:38","name":"GUEST","description":"游客，只能查看，不能修改删除","resources":null}]},
+  'test-token':{"id":"1128217126515646466","createTime":"2019-05-14T16:34:58","updateTime":"2019-05-15T08:25:47","nickname":"游客","username":"test","password":"ba2db62f990019023b2dd826df80ddb9","sex":1,"status":1,"company":"test","phone":"18552365241","email":null,"avatar":"http://jorianye.cn:8084/2019/05/15/17/234318328.jpg","roles":[{"id":"1128215278081679361","createTime":"2019-05-14T16:27:38","updateTime":"2019-05-14T16:27:38","name":"GUEST","description":"游客，只能查看，不能修改删除","resources":null}]},
 }
 
 export default [
@@ -39,9 +27,10 @@ export default [
           message: 'Account and password are incorrect.'
         }
       }
-
+      console.log(token)
       return {
         code: 200,
+        msg:'success',
         data: token
       }
     }
@@ -53,18 +42,17 @@ export default [
     type: 'get',
     response: config => {
       const { token } = config.query
-      const info = users[token]
-
+      const info = users['test-token']
       // mock error
       if (!info) {
         return {
           code: 50008,
-          message: 'Login failed, unable to get user details.'
+          message: '登陆陆失败，无法获取用户详情'
         }
       }
-
       return {
         code: 200,
+        msg:'success',
         data: info
       }
     }
@@ -72,13 +60,35 @@ export default [
 
   // user logout
   {
-    url: '/account',
-    type: 'post',
-    response: _ => {
+    url: '/account/routers',
+    type: 'get',
+    response: config => {
+      const { token } = config.query
+      const data = [
+        {"path":"/system",
+          "component":"@/layout",
+          "redirect":"/system/user",
+          "name":"System",
+          "meta":{"icon":"system","title":"系统管理"},
+          "hidden":null,
+          "children":[
+            {
+              "path": "/system/user",
+              "component": "/system/user/index",
+              "redirect": null,
+              "name": "User",
+              "meta": {"icon": "user", "title": "用户管理"},
+              "hidden": null,
+              "children": []
+            }
+             ]
+        }
+        ]
       return {
         code: 200,
-        data: 'success'
-      }
+        msg:'success',
+        data: data
     }
+  }
   }
 ]

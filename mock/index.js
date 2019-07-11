@@ -1,4 +1,4 @@
-//import Mock from 'mockjs'
+import Mock from 'mockjs'
 import { param2Obj } from '../src/utils'
 //SystemAPI
 import user from './user'
