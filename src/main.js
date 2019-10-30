@@ -17,15 +17,17 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 
-import * as filters from './filters' // global filters
+import * as filters from './filters' //
 import VueParticles from 'vue-particles'// 背景颗粒子插件
 
 /**
- * 如果是开发环境，自动启用mock数据
- */
-/*import { mockXHR } from '../mock'
-  mockXHR()*/
+ * 如果是前后端分离开发，可以启用mock数据,不想模拟数据的，请一定注释掉下边部分！！
 
+import { mockXHR } from '../mock'
+if (process.env.NODE_ENV === 'development') {
+  mockXHR()
+}
+ */
 
 Vue.use(VueParticles)
 Vue.use(Element, {

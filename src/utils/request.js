@@ -5,9 +5,8 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  //  // url = base url + request url
+ // url = base url + request url
   baseURL: process.env.VUE_APP_BASE_API,
-  // baseURL: 'http://127.0.0.1:8085/',
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -23,7 +22,6 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
     return Promise.reject(error)
   }
 )
@@ -56,10 +54,17 @@ service.interceptors.response.use(
           type: 'error',
           duration: 5 * 1000
         })
-        // to re-login
-        /* store.dispatch('user/resetToken').then(() => {
-          location.reload()
-        })*/
+        if (res.code === 500) {
+          Message({
+            message: res.msg,
+            type: 'error',
+            duration: 5 * 1000
+          })
+          // to re-login
+          /* store.dispatch('user/resetToken').then(() => {
+            location.reload()
+          })*/
+        }
       }
       return Promise.reject(res.message || 'error')
     } else {

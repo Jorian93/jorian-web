@@ -48,7 +48,7 @@
           </el-form-item>
         </el-tooltip>
 
-        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">
+        <el-button :loading="loading" type="primary" round style="width:100%;margin-bottom:30px;" class="btn-login" @click.native.prevent="handleLogin">
           {{ $t('login.logIn') }}
         </el-button>
 
@@ -64,9 +64,9 @@
          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
        </div>-->
 
-          <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
+          <!--<el-button class="thirdparty-button" type="primary" @click="showDialog=true">
             {{ $t('login.thirdparty') }}
-          </el-button>
+          </el-button>-->
         </div>
       </el-form>
     </div>
@@ -74,7 +74,7 @@
       color="#fff"
       :particle-opacity="0.7"
       :particles-number="60"
-      shape-type="circle"
+      shape-type="triangle"
       :particle-size="4"
       lines-color="#fff"
       :lines-width="1"
@@ -87,7 +87,7 @@
       :click-effect="true"
       click-mode="push"
     />
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" :modal-append-to-body='false'>
+    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog">
       {{ $t('login.thirdpartyTips') }}
       <br>
       <br>
@@ -109,22 +109,22 @@ export default {
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('用户名错误'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码错误！'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'test',
-        password: 'test123'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -135,7 +135,7 @@ export default {
       loading: false,
       showDialog: false,
       redirect: undefined,
-      bgImageRUL: require('@/assets/images/background3.jpg')
+      bgImageRUL: require('@/assets/images/background.jpg')
     }
   },
   watch: {
@@ -306,7 +306,7 @@ $light_gray:#eee;
 
   .svg-container {
     padding: 6px 5px 6px 15px;
-    color: $dark_gray;
+    color: $light_gray;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -317,14 +317,14 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: #4cc3b8;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
     }
 
     .set-language {
-      color: #fff;
+      color: #4cc3b8;
       position: absolute;
       top: 3px;
       font-size: 18px;
@@ -338,7 +338,7 @@ $light_gray:#eee;
     right: 10px;
     top: 7px;
     font-size: 16px;
-    color: $dark_gray;
+    color: $light_gray;
     cursor: pointer;
     user-select: none;
   }
@@ -355,4 +355,13 @@ $light_gray:#eee;
     }
   }
 }
+  .btn-login{
+    color: #FFFFFF;
+    background-color:#4cc3b8;
+    border-color:#4cc3b8;
+  }
+el-input__inner::placeholder {
+  color: $light_gray;
+}
+
 </style>

@@ -3,6 +3,25 @@ import { getCurrentUserRouter } from '@/api/account/account'
 import Layout from '@/layout'
 import import_router from '@/router/import_router'
 
+const routers=[
+  {
+    path: '/system',
+    component: '@/layout',
+    redirect: '/system/user',
+    name: 'System',
+    meta: {icon: 'system',title: '系统管理'},
+    children: [
+      {
+        path: '/system/user',
+        component: '/system/user/index',
+        name: 'User',
+        meta: {icon: 'user',title: '用户管理'},
+        children: []
+      }
+    ]
+  }
+]
+
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -71,19 +90,16 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
-    // 此处模拟后端返回路由表
+    // 此处从后端返回路由表
     return new Promise(resolve => {
       getCurrentUserRouter().then(response => {
-        const data = response.data
+        let data = response.data
         let accessedRoutes = []
-        // 此处等后台数据整理好放开，先用模拟数据
-
         accessedRoutes = filterAsyncRouter(data)
-        // accessedRoutes = filterAsyncRouter(asyncRoutes)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       }).catch(error => {
-        reject(error)
+        Promise.reject(error)
       })
     })
   }

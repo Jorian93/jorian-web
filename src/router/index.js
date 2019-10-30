@@ -100,10 +100,36 @@ export const constantRoutes = [
     ]
   }
 ]
+
 /**
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
+export const asyncRoutes = [
+  {
+    path: "/system",
+    component: "@/layout",
+    redirect: "/system/user",
+    name: "System",
+    meta: {
+      icon: "system",
+      title: "系统管理"
+    },
+    children: [
+      {
+        path: "/system/user",
+        component: "/system/user/index",
+        redirect: null,
+        name: "User",
+        meta: {icon: "user",title: "用户管理"},
+        hidden: null,
+        children: []
+      }
+    ]
+  }
+]
+
+
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
