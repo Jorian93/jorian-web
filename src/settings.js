@@ -1,5 +1,5 @@
 module.exports = {
-  title: '后台管理',
+  title: 'Jorian管理系统',
 
   /**
    * @type {boolean} true | false
